@@ -1,4 +1,3 @@
-
 class Response {
   constructor(data = null, message = null) {
     this.data = data;
@@ -9,7 +8,7 @@ class Response {
     return res.status(200).json({
       success: true,
       data: this.data,
-      message: this.message ?? "İişlem Başarılı",
+      message: this.message ?? "İşlem Başarılı",
     });
   }
   created(res) {

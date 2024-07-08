@@ -4,36 +4,47 @@ const APIError = require("../utils/errors");
 const Response = require("../utils/response");
 
 const login = async (req, res) => {
-    console.log(req.body);
-    return res.json(req.body);
-}
-const register = async(req, res) => {
-    const { email} = req.body
+  const { email, password } = req.body;
 
-    const userCheck = await user.findOne({ email })
- 
-    if (userCheck) {
-       throw new APIError("Girmiş oldugunuz mail kullanımda!", 401)
-    }
+  const userInfo = await user.findOne({ email });
 
- req.body.password = await bcrypt.hash(req.body.password, 10)
+  if (!userInfo) throw new APIError("Email yada şifre hatalı!", 401);
 
-console.log("hash sifre: ", req.body.password);
+  const comparePassword = await bcrypt.compare(password, userInfo.password);
+  console.log(comparePassword);
 
-    const userSave = new user(req.body)
+  if (!comparePassword) throw new APIError("Email yada şifre hatalı!", 401);
 
-    await userSave.save()
+  return res.json(req.body);
+};
+
+const register = async (req, res) => {
+  const { email } = req.body;
+
+  const userCheck = await user.findOne({ email });
+
+  if (userCheck) {
+    throw new APIError("Girmiş oldugunuz mail kullanımda!", 401);
+  }
+
+  req.body.password = await bcrypt.hash(req.body.password, 10);
+
+  console.log("hash sifre: ", req.body.password);
+
+  const userSave = new user(req.body);
+  //Response bir class olduğu için new kullanılır.
+  await userSave
+    .save()
     .then((data) => {
-      return new Response(data, "Kayıt başarıyla eklendi").created(res)
+      return new Response(data, "Kayıt başarıyla eklendi").created(res);
     })
     .catch((err) => {
-        throw new APIError("Kullanıcı kayıt edilemedi!", 400 )
-    console.log(err);
+      throw new APIError("Kullanıcı kayıt edilemedi!", 400);
+      console.log(err);
     });
-
-      }
+};
 
 module.exports = {
-    login,
-    register
-}
+  login,
+  register,
+};
