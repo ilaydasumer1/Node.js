@@ -2,6 +2,7 @@ const user = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const APIError = require("../utils/errors");
 const Response = require("../utils/response");
+const { createToken } = require("../middlewares/auth");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -15,8 +16,8 @@ const login = async (req, res) => {
 
   if (!comparePassword) throw new APIError("Email yada şifre hatalı!", 401);
 
-  return res.json(req.body);
-};
+  createToken(userInfo, res);
+}; 
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -44,7 +45,3 @@ const register = async (req, res) => {
     });
 };
 
-module.exports = {
-  login,
-  register,
-};

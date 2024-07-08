@@ -46,9 +46,9 @@ class authValidation {
         })
         .validateAsync(req.body);
     } catch (error) {
-      if (error.details && error.details[0].message)
+      if (error.details && error?.details[0].message)
         throw new APIError(error.details[0].message, 400);
-      else throw new APIError("Lütfen Validasyon kurallarına uyun", 400);
+      else throw new APIError("Lütfen Validasyon Kullarına Uyun", 400);
     }
     next();
   };
@@ -82,14 +82,12 @@ class authValidation {
         })
         .validateAsync(req.body);
     } catch (error) {
-      if (error.details && error.details[0].message)
+      if (error.details && error?.details[0].message)
         throw new APIError(error.details[0].message, 400);
-      else throw new APIError("Lütfen Validasyon kurallarına uyun", 400);
+      else throw new APIError("Lütfen Validasyon Kullarına Uyun", 400);
     }
     next();
   };
 }
 
 module.exports = authValidation;
-
-//details alanı, Joi tarafından doğrulama hataları için sağlanır. Joi, doğrulama hataları hakkında detaylı bilgi verir ve bu bilgi details içinde saklanır.
